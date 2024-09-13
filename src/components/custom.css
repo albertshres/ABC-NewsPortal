@@ -1,0 +1,13 @@
+.custom-icon {
+  font-size: 3rem;
+}
+.hover-zoom {
+  transition: transform 0.3s ease;
+}
+
+.hover-zoom:hover {
+  transform: scale(1.1);
+}
+.active-link {
+  text-decoration: underline;
+}

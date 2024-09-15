@@ -4,7 +4,7 @@ NewsPortal is a web application designed to fetch and display news articles from
 
 ## Screenshot of the homepage with news articles displayed.
 
-![Home page](src\assets\img-readme\Home.png)
+![Home page](src/assets/img-readme/Home.png)
 
 ## Screenshot of the footer
 

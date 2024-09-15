@@ -8,16 +8,16 @@ NewsPortal is a web application designed to fetch and display news articles from
 
 ## Screenshot of the footer
 
-![Footer](src\assets\img-readme\Footer.png)
+![Footer](src/assets/img-readme/Footer.png)
 
 ## Screenshot of the login page
 
-![login page](src\assets\img-readme\login.png)
+![login page](src/assets/img-readme/login.png)
 
 ## Screenshot of the signup page
 
-![signup page](src\assets\img-readme\signup.png)
+![signup page](src/assets/img-readme/signup.png)
 
 ## Screenshot of the dashboard page after the authentication
 
-![dashboard after authentication](src\assets\img-readme\Dashboard.png)
+![dashboard after authentication](src/assets/img-readme/Dashboard.png)

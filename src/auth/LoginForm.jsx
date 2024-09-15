@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { InputField, PasswordField } from "../shared/form";
+import { InputField, PasswordField } from "../components/shared/form";
 
 function LoginForm({ onLogin }) {
   // const [email, setEmail] = useState("");
@@ -20,6 +20,9 @@ function LoginForm({ onLogin }) {
   };
 
   const [state, setState] = useState({ ...initState });
+
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
 
   //destructuring for easy access
   let { data, error } = { ...state };
@@ -42,16 +45,20 @@ function LoginForm({ onLogin }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    //   if (email && password) {
-    //     onLogin({ email, password });
-    //     setError("");
-    //   } else {
-    //     setError("Please fill in all fields");
-    //   }
+
+    /*
+      if (email && password) {
+        onLogin({ email, password });
+        setError("");
+      } else {
+        setError("Please fill in all fields");
+      }
+    */
 
     // Check if email and password are filled
+    /*
     if (data.email && data.password) {
       onLogin(data);
       setState(initState); // Reset form state
@@ -61,6 +68,47 @@ function LoginForm({ onLogin }) {
         error: {
           email: data?.email ? "" : "Email must be provided",
           password: data?.password ? "" : "Password must be provided",
+        },
+      });
+    }*/
+
+    if (data.email && data.password) {
+      setLoading(true);
+      setApiError("");
+
+      try {
+        const response = await fetch(
+          "https://backend-news-portal.vercel.app/api/login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data), //sends the email and password as json
+          }
+        );
+
+        const result = await response.json();
+
+        if (response.ok) {
+          onLogin(result); //pass the result to the parent components
+
+          setState({ ...initState }); //reset form state
+        } else {
+          setApiError(result.message || "Login Failed . Please try again");
+        }
+      } catch (error) {
+        setApiError("something went wrong .Please try again");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setState({
+        ...state,
+        error: {
+          email: data?.email ? " " : "Email must be provided",
+
+          password: data?.password ? " " : "Password must be provided",
         },
       });
     }
@@ -91,8 +139,13 @@ function LoginForm({ onLogin }) {
         required={true}
         error={error?.password}
       />
-      <button type="submit" className="btn btn-primary w-100">
-        Login
+      <button
+        type="submit"
+        className="btn btn-primary w-100"
+        disabled={loading}
+      >
+        {/* Login */}
+        {loading ? "logging in..." : "login"}
       </button>
     </form>
   );

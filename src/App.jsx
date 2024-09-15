@@ -1,7 +1,7 @@
 import NavBar from "./components/shared/Navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Home, Categories, AboutUs } from "./components/pages";
-import AuthPage from "./components/auth/AuthPage";
+import AuthPage from "./auth/AuthPage";
 import "./assets/css/main.css";
 import { Footer } from "./components/shared";
 

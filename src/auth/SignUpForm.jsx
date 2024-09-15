@@ -1,7 +1,13 @@
 import React, { useState } from "react";
-import { InputField, PasswordField, RadioInput } from "../shared/form";
+import {
+  InputField,
+  PasswordField,
+  RadioInput,
+} from "../components/shared/form";
 
 function SignUpForm({ onSignUp }) {
+  const [loading, setLoading] = useState(false);
+
   let initState = {
     data: {
       name: "",
@@ -13,6 +19,7 @@ function SignUpForm({ onSignUp }) {
       confirmPassword: "",
     },
     error: {},
+    loading: false,
   };
 
   const [state, setState] = useState({ ...initState });
@@ -34,7 +41,7 @@ function SignUpForm({ onSignUp }) {
     setState({ ...state, data, error });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let { data } = { ...state };
     if (data?.password !== data?.confirmPassword) {
@@ -47,17 +54,71 @@ function SignUpForm({ onSignUp }) {
       data?.age &&
       data?.gender
     ) {
+      /*
       onSignUp(data);
       console.log("@data", data);
       setState({ ...state, data: {}, error: {} });
+    */
+
+      try {
+        setState({ ...state, loading: true });
+
+        const response = await fetch(
+          "https://backend-news-portal.vercel.app/api/signup",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: data.name,
+              email: data.email,
+              password: data.password,
+              phone: data.phone,
+              gender: data.gender,
+              age: data.age,
+            }),
+          }
+        );
+
+        const result = await response.json();
+        setState({ ...state, loading: false }); // Unset loading state
+        if (response.ok) {
+          onSignUp(result);
+          setState({ ...state, data: {}, error: {} }); // Reset form state
+          console.log("@data", result);
+        } else {
+          setState({
+            ...state,
+            error: {
+              ...error,
+              server: result.message || "Something went wrong",
+            },
+          });
+        }
+      } catch (error) {
+        setState({
+          ...state,
+          loading: false,
+          error: {
+            ...error,
+            server: "Network error. Please try again later.",
+          },
+        });
+      }
     } else {
       setState({
         ...state,
         error: {
-          name: "Name field is required.",
-          email: "Email field is required.",
-          password: "Passwords field is required",
-          confirmPassword: "Confirm password field is required",
+          name: !data?.name ? "Name field is required." : "",
+          email: !data?.email ? "Email field is required." : "",
+          password: !data?.password ? "Password field is required." : "",
+          confirmPassword: !data?.confirmPassword
+            ? "Confirm password field is required"
+            : "",
+          phone: !data?.phone ? "Phone field is required." : "",
+          gender: !data?.gender ? "Gender field is required." : "",
+          age: !data?.age ? "Age field is required." : "",
         },
       });
     }
@@ -147,8 +208,12 @@ function SignUpForm({ onSignUp }) {
         error={error?.gender}
       />
 
-      <button type="submit" className="btn btn-primary w-100">
-        Sign Up
+      <button
+        type="submit"
+        className="btn btn-primary w-100"
+        disabled={loading}
+      >
+        {loading ? "Signing Up..." : "Sign Up"}
       </button>
     </form>
   );

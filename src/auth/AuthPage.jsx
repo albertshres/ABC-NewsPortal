@@ -11,6 +11,12 @@ function AuthPage() {
 
   const handleLogin = (data) => {
     console.log("Login data:", data);
+
+    if (data?.accessToken) {
+      localStorage.setItem("accessToken", data?.accessToken);
+    }
+
+    navigate("/dashboard");
   };
 
   const handleSignUp = (data) => {
